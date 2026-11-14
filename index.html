@@ -4,497 +4,941 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EMERGENCY HAMBURG | NUCLEAR OPERATIONS</title>
+<title>MAKS CITY | Nuclear Facility</title>
 <style>
 :root{
- --bg:#080b10;--panel:#111923;--panel2:#18232f;
- --red:#e53935;--gold:#d9a441;--text:#edf2f7;
- --muted:#8997a8;--green:#32c787;
+ --bg:#0a0e13;
+ --sidebar:#0d131b;
+ --panel:#121a24;
+ --panel2:#182330;
+ --line:#293746;
+ --text:#e7edf4;
+ --muted:#8997a7;
+ --red:#b73535;
+ --gold:#c6a15b;
+ --green:#45b58a;
+ --blue:#6395c7;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);
  font-family:Arial,Tahoma,sans-serif}
-header{background:#101720;border-bottom:1px solid #293442;
- padding:18px 5%;display:flex;align-items:center;
- justify-content:space-between;gap:15px;flex-wrap:wrap}
-.brand{font-size:19px;font-weight:900;letter-spacing:1px}
-.brand span{color:var(--red)}
-.status{color:var(--green);font-size:12px}
-nav{display:flex;gap:8px;flex-wrap:wrap;padding:12px 5%;
- background:#0d131b;border-bottom:1px solid #26313d}
-button{cursor:pointer;border:1px solid #344251;border-radius:7px;
- padding:11px 15px;background:#1b2734;color:white;font-weight:bold}
-button:hover{border-color:var(--gold);background:#263545}
-button:disabled{opacity:.4;cursor:not-allowed}
-nav button{font-size:12px}
-main{max-width:1200px;margin:auto;padding:22px 4%}
-.hero{background:linear-gradient(120deg,#1a202a,#111720);
- border:1px solid #303b48;border-radius:12px;padding:25px;
- position:relative;overflow:hidden}
-.hero h1{font-size:clamp(25px,5vw,42px);margin:8px 0;color:white}
-.hero h1 span{color:var(--red)}
-.hero p{color:var(--muted);line-height:1.8}
-.tag{color:var(--red);font-size:11px;font-weight:bold;letter-spacing:2px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);
- gap:12px;margin:18px 0}
-.stat,.panel{background:var(--panel);border:1px solid #293542;
- border-radius:10px;padding:17px}
-.stat small{color:var(--muted)}
-.stat strong{display:block;font-size:23px;margin-top:9px}
-.section{margin-top:30px}
-.section h2{font-size:20px;border-right:3px solid var(--red);
- padding-right:12px}
-.sub{color:var(--muted);font-size:13px;line-height:1.8}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.block{background:var(--panel);border:1px solid #2d3947;
- border-radius:9px;padding:15px}
-.block h3{margin:5px 0 12px;font-size:15px}
-.block .number{color:var(--gold);font-size:11px}
-.block input{width:100%;padding:11px;background:#080e15;
- color:white;border:1px solid #364657;border-radius:6px;
- margin:8px 0;direction:ltr;text-align:center}
-.block.done{border-color:var(--green)}
-.block.done button{background:#14543e}
-.progress{height:9px;background:#293441;border-radius:20px;overflow:hidden}
-.progress div{height:100%;width:0;background:var(--green);
- transition:width .3s}
-.timer{font-size:35px;font-weight:900;color:var(--gold);
- direction:ltr;text-align:center;padding:12px}
-.center{text-align:center}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.primary{background:#a62c2c;border-color:#e54b4b}
-.gold{background:#80601f;border-color:var(--gold)}
-.map{
- min-height:440px;position:relative;overflow:hidden;
- border:1px solid #394653;border-radius:12px;
- background:
- linear-gradient(35deg,transparent 47%,#34404b 48%,#34404b 50%,transparent 51%),
- linear-gradient(145deg,transparent 45%,#34404b 46%,#34404b 48%,transparent 49%),
- #182b2d;
- background-size:160px 130px,180px 150px,auto;
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+ width:255px;background:var(--sidebar);border-left:1px solid var(--line);
+ position:fixed;right:0;top:0;bottom:0;z-index:10;
+ display:flex;flex-direction:column;overflow-y:auto
 }
-.map:before{content:"HAMBURG";position:absolute;top:10px;left:15px;
- font-size:30px;font-weight:900;color:#ffffff14}
-.water{position:absolute;background:#1c4050;opacity:.85;
- width:130%;height:65px;top:48%;left:-10%;transform:rotate(-15deg);
- border:1px solid #396071}
-.pin{
- position:absolute;z-index:2;transform:translate(-50%,-50%);
- background:#111c26;border:1px solid #667687;border-radius:7px;
- padding:9px 11px;font-size:11px;white-space:nowrap
+.brand{padding:24px 20px;border-bottom:1px solid var(--line)}
+.brand strong{font-size:18px;letter-spacing:1px}
+.brand strong span{color:#c6a15b}
+.brand small{display:block;color:var(--muted);margin-top:9px;font-size:10px}
+.side-label{padding:20px 20px 8px;color:#68798b;
+ font-size:10px;font-weight:bold;letter-spacing:1px}
+.nav{padding:4px 11px}
+.nav button{
+ display:flex;align-items:center;gap:12px;width:100%;text-align:right;
+ background:transparent;border:0;color:#9eacba;padding:12px 13px;
+ border-radius:6px;margin-bottom:3px;font-size:13px
 }
-.pin.selected{background:#9c2929;border-color:#ff7777;
- box-shadow:0 0 15px #e5393570}
-.pin:after{content:"";position:absolute;top:100%;left:50%;
- border:6px solid transparent;border-top-color:#667687}
-.map-label{position:absolute;bottom:12px;right:12px;
- background:#0a121cdd;padding:9px;border-radius:6px;
- font-size:11px;color:#bdc8d4}
-.alert{background:#301718;border:1px solid #8e3434;
- border-radius:8px;padding:14px;color:#ffb7b7}
-.hidden{display:none!important}
-footer{text-align:center;padding:30px;color:#788594;font-size:11px;
- border-top:1px solid #25303a;margin-top:40px}
-#blast{position:fixed;inset:0;background:#fff;
- z-index:20;display:none;align-items:center;justify-content:center;
- flex-direction:column;color:#111;text-align:center}
-#blast.show{display:flex;animation:flash .7s ease-in-out 5}
-#blast h1{font-size:clamp(35px,9vw,80px);margin:0}
-@keyframes flash{0%,100%{background:#fff}50%{background:#f04c22}}
-@media(max-width:700px){
+.nav button:hover,.nav button.active{
+ background:#202c39;color:white;border-right:3px solid var(--gold)
+}
+.nav button span{width:20px;text-align:center}
+.side-bottom{margin-top:auto;padding:17px;border-top:1px solid var(--line)}
+.side-bottom small{color:var(--muted);line-height:2}
+.main{margin-right:255px;width:calc(100% - 255px);min-width:0}
+.topbar{
+ min-height:66px;background:#0e151e;border-bottom:1px solid var(--line);
+ display:flex;justify-content:space-between;align-items:center;
+ padding:12px 25px;gap:12px;flex-wrap:wrap
+}
+.top-title{font-size:13px;font-weight:bold}
+.top-meta{font-size:11px;color:var(--muted)}
+.online{color:var(--green)}
+.content{max-width:1500px;margin:auto;padding:25px}
+.page{display:none}
+.page.active{display:block}
+.heading{margin-bottom:22px}
+.heading small{color:var(--gold);font-size:10px;font-weight:bold;letter-spacing:1px}
+.heading h1{font-size:26px;margin:9px 0}
+.heading p{font-size:12px;color:var(--muted);line-height:1.8}
+.grid{display:grid;gap:14px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:8px;padding:17px;min-width:0
+}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card-label{font-size:11px;color:var(--muted)}
+.card-value{font-size:26px;font-weight:bold;margin:14px 0 7px}
+.card-foot{font-size:10px;color:var(--muted)}
+.gold{color:var(--gold)}
+.green{color:var(--green)}
+.red{color:#e36b6b}
+.blue{color:var(--blue)}
+.section-title{
+ display:flex;align-items:center;justify-content:space-between;
+ margin:27px 0 13px;gap:10px;flex-wrap:wrap
+}
+.section-title h2{font-size:15px;margin:0}
+.section-title small{color:var(--muted);font-size:10px}
+.two{grid-template-columns:1.4fr 1fr}
+.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.panel-title{font-size:13px;font-weight:bold;margin-bottom:16px}
+.badge{
+ display:inline-block;padding:5px 8px;border-radius:3px;
+ font-size:9px;background:#26333f;color:#b9c8d5
+}
+.badge.green{background:#17362e;color:#72d7aa}
+.badge.red{background:#3d2224;color:#f08b8b}
+.badge.gold{background:#393120;color:#e2c27b}
+.line{height:1px;background:var(--line);margin:15px 0}
+.notice{
+ padding:13px 15px;border:1px solid #56472c;background:#292317;
+ color:#dfc68d;border-radius:5px;font-size:11px;line-height:1.9
+}
+.progress{height:7px;background:#27323e;border-radius:10px;overflow:hidden}
+.progress div{height:100%;background:var(--gold);transition:width .3s}
+.big-number{font-size:34px;font-weight:bold;direction:ltr;text-align:center;
+ padding:15px;color:var(--gold);font-variant-numeric:tabular-nums}
+.btn{
+ background:#273747;color:white;border:1px solid #415364;
+ border-radius:4px;padding:10px 14px;font-size:11px;font-weight:bold
+}
+.btn:hover{background:#35495c}
+.btn.primary{background:#745c30;border-color:#a88a4e}
+.btn.danger{background:#6c292b;border-color:#a84c4e}
+.btn.success{background:#20513e;border-color:#367b5e}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+input,select,textarea{
+ width:100%;background:#0c131b;color:white;border:1px solid #354454;
+ border-radius:4px;padding:11px;margin-top:7px;outline:none
+}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+label{font-size:11px;color:#aab6c3;display:block;margin-top:12px}
+textarea{min-height:90px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{text-align:right;color:#8998a9;font-weight:normal}
+th,td{padding:12px 9px;border-bottom:1px solid var(--line)}
+td{color:#d4dce5}
+.table-wrap{overflow-x:auto}
+.block-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.uranium{
+ border:1px solid var(--line);border-radius:6px;padding:13px;
+ background:#101822
+}
+.uranium.unlocked{border-color:#3b765e}
+.uranium h3{font-size:12px}
+.uranium small{font-size:9px;color:var(--muted)}
+.uranium input{text-align:center;direction:ltr;font-size:11px}
+.reactor{
+ min-height:300px;display:flex;align-items:center;justify-content:center;
+ background:radial-gradient(ellipse,#233542 0%,#111a24 60%);
+ border:1px solid var(--line);border-radius:6px;overflow:hidden;
+ position:relative
+}
+.reactor svg{width:min(100%,500px);height:auto}
+.gauges{grid-template-columns:repeat(3,1fr)}
+.gauge{background:#0d151e;padding:13px;border:1px solid var(--line);
+ border-radius:5px;text-align:center}
+.gauge strong{display:block;font-size:23px;margin:9px}
+.gauge small{color:var(--muted);font-size:10px}
+.facility-map{
+ min-height:420px;position:relative;overflow:hidden;
+ border:1px solid #3a4857;border-radius:7px;
+ background-color:#111b25;
+ background-image:linear-gradient(#243342 1px,transparent 1px),
+ linear-gradient(90deg,#243342 1px,transparent 1px);
+ background-size:30px 30px
+}
+.room{
+ position:absolute;border:1px solid #70809066;background:#202e3bdd;
+ display:flex;align-items:center;justify-content:center;text-align:center;
+ padding:8px;font-size:10px;color:#d9e1e9;cursor:pointer;
+ border-radius:3px
+}
+.room:hover,.room.selected{border-color:var(--gold);background:#4a3b24}
+.room.selected{box-shadow:0 0 12px #c6a15b44}
+.log{
+ border-right:2px solid #3e566a;padding:9px 12px;
+ margin-bottom:7px;background:#111923;font-size:11px;line-height:1.7
+}
+.log time{color:var(--gold);display:block;font-size:9px}
+.empty{color:var(--muted);text-align:center;padding:25px;font-size:12px}
+.footer{text-align:center;color:#647486;font-size:10px;padding:28px}
+.mobile-toggle{display:none}
+@media(max-width:950px){
+ .sidebar{width:215px}.main{margin-right:215px;width:calc(100% - 215px)}
  .stats{grid-template-columns:repeat(2,1fr)}
- .grid{grid-template-columns:repeat(2,1fr)}
- .pin{font-size:9px;padding:7px}
- .map{min-height:390px}
+ .two{grid-template-columns:1fr}
 }
-@media(max-width:430px){.grid{grid-template-columns:1fr}}
+@media(max-width:650px){
+ .sidebar{display:none;width:260px;box-shadow:0 0 30px #000}
+ .sidebar.open{display:flex}
+ .main{margin-right:0;width:100%}
+ .mobile-toggle{display:inline-block}
+ .content{padding:16px}
+ .block-grid,.three{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .gauges{grid-template-columns:repeat(2,1fr)}
+ .heading h1{font-size:21px}
+}
+@media(max-width:390px){
+ .block-grid,.three{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
+<div class="layout">
 
-<header>
- <div class="brand">EMERGENCY <span>HAMBURG</span></div>
- <div class="status">● SYSTEM ONLINE / RP SIMULATION</div>
+<aside class="sidebar" id="sidebar">
+ <div class="brand">
+  <strong>MAKS <span>CITY</span></strong>
+  <small>NUCLEAR FACILITY / DIRECTORATE</small>
+ </div>
+
+ <div class="side-label">الرئيسية</div>
+ <div class="nav">
+  <button class="active" data-page="dashboard"><span>▦</span> لوحة القيادة</button>
+  <button data-page="reactor"><span>◉</span> مركز المفاعل</button>
+  <button data-page="uranium"><span>⬡</span> مخازن Uranium</button>
+  <button data-page="mining"><span>◷</span> وحدة Mining</button>
+  <button data-page="map"><span>⌖</span> خريطة المنشأة</button>
+ </div>
+
+ <div class="side-label">الإدارة والتشغيل</div>
+ <div class="nav">
+  <button data-page="staff"><span>♙</span> الموظفون والرتب</button>
+  <button data-page="reports"><span>▤</span> التقارير الرسمية</button>
+  <button data-page="incidents"><span>⚠</span> مركز الطوارئ</button>
+  <button data-page="archive"><span>▣</span> أرشيف العمليات</button>
+ </div>
+
+ <div class="side-label">النظام</div>
+ <div class="nav">
+  <button data-page="settings"><span>⚙</span> الإعدادات</button>
+ </div>
+
+ <div class="side-bottom">
+  <span class="badge green">RP SYSTEM ONLINE</span>
+  <small><br>MAKS CITY GOVERNMENT<br>FACILITY CODE: MC-NF-001<br>BUILD: 1.0.0</small>
+ </div>
+</aside>
+
+<div class="main">
+<header class="topbar">
+ <div style="display:flex;align-items:center;gap:12px">
+  <button class="btn mobile-toggle" onclick="sidebarToggle()">☰</button>
+  <div>
+   <div class="top-title">المديرية العامة للمنشآت النووية</div>
+   <div class="top-meta">MAKS CITY GOVERNMENT / UNDERGROUND DIVISION</div>
+  </div>
+ </div>
+ <div style="text-align:left">
+  <div class="top-meta"><span class="online">●</span> النظام المحلي نشط</div>
+  <div class="top-meta" id="clock">--:--:--</div>
+ </div>
 </header>
 
-<nav>
- <button onclick="go('dashboard')">الرئيسية</button>
- <button onclick="go('uranium')">Uranium</button>
- <button onclick="go('mining')">Mining</button>
- <button onclick="go('mapsection')">Hamburg Map</button>
- <button onclick="go('control')">Nuke Control</button>
-</nav>
+<div class="content">
 
-<main>
-<section class="hero" id="dashboard">
- <div class="tag">CLASSIFIED ROLEPLAY OPERATIONS</div>
- <h1>NUCLEAR <span>OPERATIONS</span></h1>
- <p>مركز العمليات الخاص بسيرفر Emergency Hamburg RP.
- جميع الأنظمة هنا عبارة عن محاكاة افتراضية داخل الموقع.</p>
- <div class="alert">⚠ تنبيه: نظام تجريبي خاص بأحداث Roleplay.</div>
+<!-- DASHBOARD -->
+<section class="page active" id="page-dashboard">
+ <div class="heading">
+  <small>DIRECTORATE / OVERVIEW</small>
+  <h1>لوحة القيادة المركزية</h1>
+  <p>مرحباً بك في نظام إدارة المنشأة النووية التابعة لحكومة MAKS CITY.
+  جميع المؤشرات التقنية المعروضة هنا افتراضية خاصة بسيناريو Roleplay.</p>
+ </div>
+
+ <div class="notice">تنبيه إداري: هذه منشأة افتراضية داخل MAKS CITY RP.
+ لا تمثل البيانات قياسات مفاعل حقيقي ولا تسمح بالتحكم في أجهزة فعلية.</div>
+
+ <div class="grid stats" style="margin-top:16px">
+  <div class="card"><div class="card-label">حالة المنشأة</div>
+   <div class="card-value green">ONLINE</div><div class="card-foot">LOCAL SIMULATION</div></div>
+  <div class="card"><div class="card-label">Uranium Inventory</div>
+   <div class="card-value gold" id="statU">00 / 12</div><div class="card-foot">BLOCKS REGISTERED</div></div>
+  <div class="card"><div class="card-label">Mining Status</div>
+   <div class="card-value" id="statMining">LOCKED</div><div class="card-foot">60 MINUTE RP TIMER</div></div>
+  <div class="card"><div class="card-label">Open Reports</div>
+   <div class="card-value" id="statReports">00</div><div class="card-foot">REGISTERED RECORDS</div></div>
+ </div>
+
+ <div class="section-title"><h2>حالة الأقسام</h2><small>DEPARTMENT STATUS</small></div>
+ <div class="grid three">
+  <div class="card"><div class="card-head"><b>مركز المفاعل</b><span class="badge green">SIMULATED</span></div><p class="card-foot">مراقبة افتراضية للمؤشرات.</p></div>
+  <div class="card"><div class="card-head"><b>المختبر</b><span class="badge green">AVAILABLE</span></div><p class="card-foot">ملفات وتجارب RP خيالية.</p></div>
+  <div class="card"><div class="card-head"><b>الأمن</b><span class="badge gold">MONITORED</span></div><p class="card-foot">سجل حراسة المنشأة.</p></div>
+  <div class="card"><div class="card-head"><b>المخازن</b><span class="badge green">ACTIVE</span></div><p class="card-foot">تسجيل القطع الافتراضية.</p></div>
+  <div class="card"><div class="card-head"><b>الإدارة</b><span class="badge green">ACTIVE</span></div><p class="card-foot">إدارة الموظفين والتقارير.</p></div>
+  <div class="card"><div class="card-head"><b>الطوارئ</b><span class="badge gold">STANDBY</span></div><p class="card-foot">إدارة حوادث RP.</p></div>
+ </div>
+
+ <div class="section-title"><h2>آخر نشاطات المنشأة</h2><small>ACTIVITY FEED</small></div>
+ <div class="card" id="recentLogs"></div>
 </section>
 
-<div class="stats">
- <div class="stat"><small>Uranium Blocks</small><strong id="count">0 / 12</strong></div>
- <div class="stat"><small>Mining Status</small><strong id="minestatus">LOCKED</strong></div>
- <div class="stat"><small>Control Center</small><strong id="controlstatus">LOCKED</strong></div>
- <div class="stat"><small>Selected Location</small><strong id="selectedstatus">NONE</strong></div>
-</div>
+<!-- REACTOR -->
+<section class="page" id="page-reactor">
+ <div class="heading"><small>TECHNICAL DEPARTMENT / RP</small>
+ <h1>مركز مراقبة المفاعل</h1>
+ <p>واجهة عرض هندسية خيالية لمفاعل MAKS CITY.
+ الأرقام أدناه قيم تجريبية للعرض فقط وليست قياسات فيزيائية.</p></div>
+ <div class="notice">SIMULATION ONLY — جميع المؤشرات الافتراضية لا تمثل حرارة أو ضغطاً أو طاقة حقيقية.</div>
+ <div class="section-title"><h2>المخطط الهندسي التوضيحي</h2><small>CONCEPTUAL SCHEMATIC</small></div>
+ <div class="reactor">
+  <svg viewBox="0 0 500 300" role="img" aria-label="مخطط توضيحي خيالي">
+   <defs>
+    <linearGradient id="metal" x2="1" y2="1">
+     <stop stop-color="#657787"/><stop offset="1" stop-color="#202e3b"/>
+    </linearGradient>
+   </defs>
+   <rect x="135" y="38" width="230" height="225" rx="22"
+    fill="none" stroke="#9aa9b8" stroke-width="3"/>
+   <rect x="155" y="60" width="190" height="180" rx="13"
+    fill="#142531" stroke="#627c8e" stroke-width="2"/>
+   <ellipse cx="250" cy="148" rx="68" ry="78"
+    fill="#203c4a" stroke="#d0b16a" stroke-width="3"/>
+   <ellipse cx="250" cy="148" rx="43" ry="54"
+    fill="#2c5360" stroke="#82b5bf" stroke-width="2"/>
+   <path d="M220 115 L280 115 M215 140 L285 140 M215 165 L285 165 M225 190 L275 190"
+    stroke="#c6a15b" stroke-width="4" stroke-linecap="round"/>
+   <path d="M135 90 H85 V65 H40 M365 90 H415 V65 H460"
+    fill="none" stroke="#8197a7" stroke-width="5"/>
+   <path d="M135 208 H85 V235 H40 M365 208 H415 V235 H460"
+    fill="none" stroke="#8197a7" stroke-width="5"/>
+   <g fill="#d5c18c" font-size="11" text-anchor="middle">
+    <text x="250" y="18">FICTIONAL REACTOR DISPLAY</text>
+    <text x="250" y="285">MAKS CITY — CONCEPT MODEL</text>
+   </g>
+   <g fill="#b4c6d4" font-size="10">
+    <text x="15" y="53">ZONE A</text><text x="421" y="53">ZONE B</text>
+    <text x="15" y="252">ZONE C</text><text x="421" y="252">ZONE D</text>
+   </g>
+  </svg>
+ </div>
 
-<section class="section" id="uranium">
- <h2>01 — URANIUM COLLECTION</h2>
- <p class="sub">أدخل كود كل قطعة لفتحها. كل كود صالح للاستعمال مرة واحدة في هذا المتصفح.</p>
- <div class="progress"><div id="uraniumbar"></div></div>
- <p class="sub" id="progresslabel">0% COMPLETED</p>
- <div class="grid" id="blocks"></div>
-</section>
-
-<section class="section" id="mining">
- <h2>02 — MINING CENTER</h2>
- <div class="panel center">
-  <div class="tag">MINING OPERATION</div>
-  <p class="sub" id="miningmessage">اجمع 12 قطعة Uranium لفتح هذا القسم.</p>
-  <div class="timer" id="minetimer">00:01:00</div>
-  <div class="progress"><div id="minebar"></div></div>
-  <p class="sub" id="minepercent">WAITING FOR COLLECTION</p>
+ <div class="section-title"><h2>المؤشرات الافتراضية</h2><small>DEMO TELEMETRY</small></div>
+ <div class="grid gauges">
+  <div class="gauge"><small>SIMULATION LOAD</small><strong class="gold" id="gLoad">42%</strong><small>DEMO VALUE</small></div>
+  <div class="gauge"><small>ENERGY INDEX</small><strong class="blue" id="gEnergy">68%</strong><small>DEMO VALUE</small></div>
+  <div class="gauge"><small>COOLING INDEX</small><strong class="green" id="gCool">91%</strong><small>DEMO VALUE</small></div>
+  <div class="gauge"><small>FACILITY STATUS</small><strong class="green" style="font-size:15px">NORMAL</strong><small>ROLEPLAY STATE</small></div>
+  <div class="gauge"><small>ALERT LEVEL</small><strong class="green" style="font-size:15px">LOW</strong><small>ROLEPLAY STATE</small></div>
+  <div class="gauge"><small>DATA QUALITY</small><strong class="blue">100%</strong><small>LOCAL DATA</small></div>
+ </div>
+ <div class="section-title"><h2>إدارة الحالة الافتراضية</h2></div>
+ <div class="card">
+  <p class="card-foot">تغيير الحالة لأغراض الأحداث القصصية فقط.</p>
   <div class="actions">
-   <button class="gold" id="minebutton" disabled onclick="startMining()">START MINING</button>
+   <button class="btn success" onclick="setReactor('NORMAL')">NORMAL</button>
+   <button class="btn" onclick="setReactor('MAINTENANCE')">MAINTENANCE</button>
+   <button class="btn danger" onclick="setReactor('RP ALERT')">RP ALERT</button>
+  </div>
+  <p id="reactorState" class="gold" style="font-size:12px">الحالة: NORMAL</p>
+ </div>
+</section>
+
+<!-- URANIUM -->
+<section class="page" id="page-uranium">
+ <div class="heading"><small>STORAGE DIVISION / INVENTORY</small>
+ <h1>إدارة مخازن Uranium</h1>
+ <p>اثنتا عشرة قطعة افتراضية. كل كود يفتح خانة واحدة فقط.</p></div>
+ <div class="notice">الأكواد التجريبية موجودة في مصدر HTML؛ لا تعتبر أسراراً أو نظام مصادقة آمن.</div>
+ <div class="grid stats" style="margin-top:15px">
+  <div class="card"><div class="card-label">REGISTERED BLOCKS</div><div class="card-value gold" id="uCount">0/12</div></div>
+  <div class="card"><div class="card-label">REMAINING</div><div class="card-value" id="uRemain">12</div></div>
+  <div class="card"><div class="card-label">STORAGE</div><div class="card-value green">LOCAL</div></div>
+  <div class="card"><div class="card-label">INVENTORY</div><div class="card-value">12 SLOTS</div></div>
+ </div>
+ <div class="section-title"><h2>سجل القطع</h2><small>BLOCK REGISTRY</small></div>
+ <div class="grid block-grid" id="uraniumBlocks"></div>
+</section>
+
+<!-- MINING -->
+<section class="page" id="page-mining">
+ <div class="heading"><small>RESOURCE MANAGEMENT / RP</small>
+ <h1>وحدة Mining الافتراضية</h1>
+ <p>مرحلة جمع افتراضية بمدة ساعة واحدة ضمن أحداث MAKS CITY.</p></div>
+ <div class="card" style="max-width:750px;margin:auto;text-align:center">
+  <div class="badge gold">60 MINUTE RP PROCESS</div>
+  <div class="big-number" id="mineTimer">01:00:00</div>
+  <div class="progress"><div id="mineProgress" style="width:0%"></div></div>
+  <p class="card-foot" id="mineMessage">يجب تسجيل القطع الاثنتي عشرة أولاً.</p>
+  <div class="actions" style="justify-content:center;margin-top:18px">
+   <button class="btn primary" id="mineStart" onclick="startMining()">START MINING</button>
+   <button class="btn" onclick="resetMining()">RESET TIMER</button>
   </div>
  </div>
+ <div class="section-title"><h2>سجل مرحلة Mining</h2></div>
+ <div class="card" id="miningInfo"></div>
 </section>
 
-<section class="section" id="mapsection">
- <h2>03 — HAMBURG CITY MAP</h2>
- <p class="sub">خريطة تخطيطية للمدينة لأغراض RP. اختار موقعاً افتراضياً من العلامات.</p>
- <div class="map" id="citymap">
-  <div class="water"></div>
-  <button class="pin" style="top:19%;left:20%" onclick="choose('POLICE STATION')">🚔 Police</button>
-  <button class="pin" style="top:25%;left:72%" onclick="choose('HOSPITAL')">🏥 Hospital</button>
-  <button class="pin" style="top:55%;left:25%" onclick="choose('FIRE STATION')">🚒 Fire</button>
-  <button class="pin" style="top:73%;left:75%" onclick="choose('BANK')">🏦 Bank</button>
-  <button class="pin" style="top:83%;left:38%" onclick="choose('HARBOUR')">⚓ Harbour</button>
-  <button class="pin" style="top:38%;left:49%" onclick="choose('CITY CENTER')">🏙 City Center</button>
-  <button class="pin" style="top:65%;left:54%" onclick="choose('PRISON')">🔒 Prison</button>
-  <button class="pin" style="top:15%;left:48%" onclick="choose('DEALERSHIP')">🚗 Dealership</button>
-  <div class="map-label">HAMBURG — RP SCHEMATIC MAP</div>
+<!-- MAP -->
+<section class="page" id="page-map">
+ <div class="heading"><small>FACILITY PLANNING / FLOOR PLAN</small>
+ <h1>مخطط المنشأة تحت الأرض</h1>
+ <p>خريطة تخطيطية خيالية للمبنى الحكومي، وليست خريطة مدينة Emergency Hamburg.</p></div>
+ <div class="notice">اختر قسماً من المخطط لعرض معلوماته. التصميم معماري تخيلي لأغراض RP فقط.</div>
+ <div class="section-title"><h2>UNDERGROUND LEVEL — B1</h2><small>FACILITY FLOOR PLAN</small></div>
+ <div class="facility-map" id="facilityMap">
+  <div class="room" style="top:8%;left:5%;width:24%;height:23%" onclick="selectRoom(this,'المديرية العامة')">01<br>المديرية العامة</div>
+  <div class="room" style="top:8%;left:36%;width:25%;height:23%" onclick="selectRoom(this,'مركز الإدارة')">02<br>مركز الإدارة</div>
+  <div class="room" style="top:8%;left:68%;width:26%;height:23%" onclick="selectRoom(this,'غرفة الاجتماعات')">03<br>غرفة الاجتماعات</div>
+  <div class="room" style="top:39%;left:5%;width:24%;height:23%" onclick="selectRoom(this,'المختبر الافتراضي')">04<br>المختبر الافتراضي</div>
+  <div class="room" style="top:39%;left:36%;width:25%;height:23%" onclick="selectRoom(this,'مركز المراقبة')">05<br>مركز المراقبة</div>
+  <div class="room" style="top:39%;left:68%;width:26%;height:23%" onclick="selectRoom(this,'مخازن المواد الافتراضية')">06<br>مخازن المواد</div>
+  <div class="room" style="top:70%;left:5%;width:24%;height:22%" onclick="selectRoom(this,'الأمن والحراسة')">07<br>الأمن والحراسة</div>
+  <div class="room" style="top:70%;left:36%;width:25%;height:22%" onclick="selectRoom(this,'مركز الطوارئ')">08<br>مركز الطوارئ</div>
+  <div class="room" style="top:70%;left:68%;width:26%;height:22%" onclick="selectRoom(this,'الأرشيف')">09<br>الأرشيف</div>
  </div>
- <p class="sub center" id="mapselection">لم يتم اختيار موقع بعد.</p>
+ <div class="card" style="margin-top:13px">
+  <div class="card-label">SELECTED DEPARTMENT</div>
+  <div id="roomInfo" style="margin-top:10px;font-weight:bold">لم يتم اختيار قسم</div>
+ </div>
 </section>
 
-<section class="section" id="control">
- <h2>04 — NUCLEAR CONTROL SIMULATION</h2>
- <div class="panel center">
-  <div class="tag">FINAL EVENT CONTROL</div>
-  <p class="sub" id="controlmessage">مركز التحكم مقفل. أكمل مرحلة Mining أولاً.</p>
-  <div class="timer" id="nuketimer">01:00</div>
-  <div class="progress"><div id="nukebar"></div></div>
-  <p class="sub" id="nukestatus">SYSTEM LOCKED</p>
+<!-- STAFF -->
+<section class="page" id="page-staff">
+ <div class="heading"><small>HUMAN RESOURCES / REGISTRY</small>
+ <h1>إدارة الموظفين والرتب</h1>
+ <p>سجل أعضاء المنشأة ومسؤولياتهم ضمن سيرفر MAKS CITY RP.</p></div>
+ <div class="card">
+  <div class="panel-title">إضافة موظف جديد</div>
+  <div class="grid two">
+   <div><label>الاسم داخل السيرفر</label><input id="staffName" placeholder="اسم الموظف"></div>
+   <div><label>الرقم الوظيفي</label><input id="staffID" placeholder="MC-001"></div>
+   <div><label>القسم</label><select id="staffDept">
+    <option>الإدارة العامة</option><option>قسم المختبر</option>
+    <option>الأمن والحراسة</option><option>مركز المراقبة</option>
+    <option>إدارة المخازن</option><option>الطوارئ</option>
+   </select></div>
+   <div><label>الرتبة</label><select id="staffRank">
+    <option>مدير المنشأة</option><option>نائب المدير</option>
+    <option>رئيس قسم</option><option>مشرف</option>
+    <option>مهندس RP</option><option>موظف</option>
+    <option>متدرب</option><option>حارس</option>
+   </select></div>
+  </div>
+  <button class="btn primary" style="margin-top:15px" onclick="addStaff()">تسجيل الموظف</button>
+ </div>
+ <div class="section-title"><h2>سجل الموظفين</h2><small>EMPLOYEE REGISTRY</small></div>
+ <div class="card table-wrap">
+  <table><thead><tr><th>الاسم</th><th>ID</th><th>القسم</th><th>الرتبة</th><th>الإجراء</th></tr></thead>
+  <tbody id="staffTable"></tbody></table>
+ </div>
+</section>
+
+<!-- REPORTS -->
+<section class="page" id="page-reports">
+ <div class="heading"><small>ADMINISTRATION / DOCUMENTS</small>
+ <h1>التقارير الرسمية</h1><p>إنشاء وحفظ تقارير الأحداث والعمليات داخل RP.</p></div>
+ <div class="card">
+  <div class="panel-title">إنشاء تقرير جديد</div>
+  <label>عنوان التقرير</label><input id="reportTitle" placeholder="عنوان التقرير">
+  <label>نوع التقرير</label>
+  <select id="reportType"><option>تقرير إداري</option><option>تقرير أمني</option>
+  <option>تقرير صيانة RP</option><option>تقرير حادث</option><option>تقرير اجتماع</option></select>
+  <label>تفاصيل التقرير</label><textarea id="reportBody" placeholder="اكتب تفاصيل التقرير..."></textarea>
+  <button class="btn primary" style="margin-top:13px" onclick="addReport()">حفظ التقرير</button>
+ </div>
+ <div class="section-title"><h2>أرشيف التقارير</h2></div>
+ <div class="card table-wrap">
+  <table><thead><tr><th>الرقم</th><th>العنوان</th><th>النوع</th><th>التاريخ</th></tr></thead>
+  <tbody id="reportTable"></tbody></table>
+ </div>
+</section>
+
+<!-- INCIDENTS -->
+<section class="page" id="page-incidents">
+ <div class="heading"><small>SAFETY ADMINISTRATION / RP</small>
+ <h1>مركز الطوارئ</h1><p>تسجيل الحوادث الافتراضية وإدارة حالات المنشأة القصصية.</p></div>
+ <div class="notice">هذا القسم لإدارة سيناريوهات RP فقط ولا يمثل نظام استجابة أو سلامة لمنشأة حقيقية.</div>
+ <div class="grid three" style="margin-top:15px">
+  <div class="card"><div class="card-label">OPEN INCIDENTS</div><div class="card-value red" id="incidentCount">0</div></div>
+  <div class="card"><div class="card-label">FACILITY STATE</div><div class="card-value green" id="facilityState">NORMAL</div></div>
+  <div class="card"><div class="card-label">ALERT LEVEL</div><div class="card-value gold" id="alertLevel">LOW</div></div>
+ </div>
+ <div class="card" style="margin-top:15px">
+  <div class="panel-title">تسجيل حادث RP</div>
+  <label>نوع الحادث</label>
+  <select id="incidentType"><option>إنذار إداري</option><option>عطل افتراضي</option>
+  <option>حادث أمني RP</option><option>إخلاء قصصي</option><option>حدث طارئ</option></select>
+  <label>وصف الحادث</label><textarea id="incidentDesc" placeholder="تفاصيل الحادث..."></textarea>
+  <button class="btn danger" style="margin-top:12px" onclick="addIncident()">تسجيل الحادث</button>
+ </div>
+ <div class="section-title"><h2>سجل الحوادث</h2></div>
+ <div class="card" id="incidentList"></div>
+</section>
+
+<!-- ARCHIVE -->
+<section class="page" id="page-archive">
+ <div class="heading"><small>RECORDS MANAGEMENT / ARCHIVE</small>
+ <h1>أرشيف العمليات</h1><p>جميع النشاطات المسجلة داخل المتصفح.</p></div>
+ <div class="card">
+  <div class="panel-title">سجل النظام</div>
+  <div id="fullLogs"></div>
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="page" id="page-settings">
+ <div class="heading"><small>SYSTEM ADMINISTRATION</small>
+ <h1>إعدادات النظام</h1><p>إدارة بيانات المنشأة ونسخ احتياطي محلي.</p></div>
+ <div class="card">
+  <div class="panel-title">معلومات المنشأة</div>
+  <label>اسم المنشأة</label><input id="facilityName" value="MAKS CITY NUCLEAR FACILITY">
+  <label>رمز المنشأة</label><input id="facilityCode" value="MC-NF-001">
+  <label>اسم المدير</label><input id="director" placeholder="اسم مدير المنشأة">
+  <button class="btn primary" style="margin-top:13px" onclick="saveSettings()">حفظ الإعدادات</button>
+ </div>
+ <div class="section-title"><h2>إدارة البيانات</h2></div>
+ <div class="card">
+  <p class="card-foot">يمكنك تنزيل نسخة احتياطية من البيانات المحفوظة في هذا المتصفح.</p>
   <div class="actions">
-   <button id="nukebutton" class="primary" disabled onclick="startNuke()">START RP EVENT</button>
-   <button onclick="stopAlarm()">STOP ALARM</button>
+   <button class="btn success" onclick="backup()">EXPORT BACKUP</button>
+   <button class="btn" onclick="document.getElementById('importFile').click()">IMPORT BACKUP</button>
+   <input id="importFile" type="file" accept=".json" hidden onchange="restoreBackup(event)">
+   <button class="btn danger" onclick="factoryReset()">FACTORY RESET</button>
   </div>
  </div>
+ <div class="notice" style="margin-top:15px">GitHub Pages لا يوفر قاعدة بيانات مشتركة بين المستخدمين.
+ هذه النسخة تحفظ البيانات على الجهاز والمتصفح الحالي فقط. لا تستخدمها لحفظ معلومات شخصية حساسة.</div>
 </section>
 
-<section class="section">
- <h2>05 — SYSTEM LOGS</h2>
- <div class="panel" id="logs" style="font-size:12px;line-height:2">
-  SYSTEM INITIALIZED
- </div>
-</section>
-
-<div class="actions" style="margin-top:30px">
- <button onclick="resetAll()">RESET ALL PROGRESS</button>
+<div class="footer">
+ MAKS CITY GOVERNMENT • NUCLEAR FACILITY RP<br>
+ INTERNAL ROLEPLAY MANAGEMENT SYSTEM • VERSION 1.0.0
 </div>
-</main>
-
-<div id="blast">
- <div style="font-size:70px">☢️</div>
- <h1>RP EVENT COMPLETE</h1>
- <p>انتهت المحاكاة النووية الافتراضية.</p>
- <button onclick="closeBlast()">RETURN TO SYSTEM</button>
 </div>
-
-<footer>
-EMERGENCY HAMBURG RP • NUCLEAR OPERATIONS V1.0<br>
-FICTIONAL ROLEPLAY SIMULATION — NOT AN OFFICIAL GAME SYSTEM
-</footer>
+</div>
+</div>
 
 <script>
-// =====================================
-// 12 FICTIONAL REDEEM CODES
-// =====================================
-const REDEEM_CODES = [
- "UR-7K29-AH01","UR-8M41-BH02",
- "UR-9P53-CH03","UR-2Q64-DH04",
- "UR-3R75-EH05","UR-4S86-FH06",
- "UR-5T97-GH07","UR-6U18-HH08",
- "UR-1V29-IH09","UR-2W30-JH10",
- "UR-3X41-KH11","UR-4Y52-LH12"
+"use strict";
+
+// ===========================================
+// MAKS CITY — FICTIONAL ROLEPLAY DATA
+// ===========================================
+
+const STORAGE_KEY="MAKS_CITY_NUCLEAR_FACILITY_V1";
+
+const CODES=[
+ "MAKS-UR-01-7K29","MAKS-UR-02-8M41",
+ "MAKS-UR-03-9P53","MAKS-UR-04-2Q64",
+ "MAKS-UR-05-3R75","MAKS-UR-06-4S86",
+ "MAKS-UR-07-5T97","MAKS-UR-08-6U18",
+ "MAKS-UR-09-1V29","MAKS-UR-10-2W30",
+ "MAKS-UR-11-3X41","MAKS-UR-12-4Y52"
 ];
 
-const names = [
- "Uranium Block 01","Uranium Block 02",
- "Uranium Block 03","Uranium Block 04",
- "Uranium Block 05","Uranium Block 06",
- "Uranium Block 07","Uranium Block 08",
- "Uranium Block 09","Uranium Block 10",
- "Uranium Block 11","Uranium Block 12"
-];
+const BLOCKS=Array.from({length:12},(_,i)=>({
+ id:i+1,name:"Uranium Block "+String(i+1).padStart(2,"0")
+}));
 
-const KEY="hamburg_nuclear_rp_v1";
-const HOUR=60*60*1000;
-const TEN_MIN=10*60*1000;
-
-let data=JSON.parse(localStorage.getItem(KEY)||"null")||{
- collected:[],mineEnd:null,nukeEnd:null,
- selected:null,finished:false
+const DEFAULT={
+ collected:[],
+ mineEnd:null,
+ miningDone:false,
+ staff:[],
+ reports:[],
+ incidents:[],
+ logs:[],
+ settings:{
+  name:"MAKS CITY NUCLEAR FACILITY",
+  code:"MC-NF-001",
+  director:""
+ },
+ reactorState:"NORMAL",
+ selectedRoom:"",
+ facilityState:"NORMAL"
 };
 
-let alarmInterval=null;
-let audioContext=null;
+function load(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if(saved)return {...DEFAULT,...saved,
+   settings:{...DEFAULT.settings,...saved.settings}};
+ }catch(e){}
+ return structuredClone(DEFAULT);
+}
+
+let db=load();
 
 function save(){
- localStorage.setItem(KEY,JSON.stringify(data));
+ localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
+}
+
+function timeNow(){
+ return new Date().toLocaleString("fr-FR");
 }
 
 function log(message){
- const el=document.getElementById("logs");
- const time=new Date().toLocaleTimeString();
- el.innerHTML=`<div>[${time}] — ${message}</div>`+el.innerHTML;
+ db.logs.unshift({message,time:timeNow()});
+ db.logs=db.logs.slice(0,150);
+ save();
+ renderLogs();
 }
 
-function go(id){
- document.getElementById(id).scrollIntoView({behavior:"smooth"});
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ }[c]));
 }
 
-function renderBlocks(){
- const container=document.getElementById("blocks");
- container.innerHTML="";
- names.forEach((name,i)=>{
-  const done=data.collected.includes(i);
-  const div=document.createElement("div");
-  div.className="block"+(done?" done":"");
-  div.innerHTML=`
-   <div class="number">BLOCK ${String(i+1).padStart(2,"0")}</div>
-   <h3>${name}</h3>
-   <input id="code${i}" placeholder="ENTER REDEEM CODE"
-    autocomplete="off" ${done?"disabled":""}>
-   <button style="width:100%" ${done?"disabled":""}
-    onclick="redeem(${i})">${done?"✓ COLLECTED":"REDEEM BLOCK"}</button>
-  `;
-  container.appendChild(div);
+// NAVIGATION
+document.querySelectorAll("[data-page]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-page]").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+button.dataset.page).classList.add("active");
+  document.getElementById("sidebar").classList.remove("open");
  });
- update();
+});
+
+function sidebarToggle(){
+ document.getElementById("sidebar").classList.toggle("open");
 }
 
-function redeem(i){
- const input=document.getElementById("code"+i);
- const code=input.value.trim().toUpperCase();
+function updateClock(){
+ document.getElementById("clock").textContent=
+  new Date().toLocaleString("fr-FR");
+}
+setInterval(updateClock,1000);
+updateClock();
 
- if(data.collected.includes(i))return;
- if(code!==REDEEM_CODES[i]){
-  alert("الكود غير صحيح!");
-  log("INVALID REDEEM ATTEMPT");
+// URANIUM
+function renderUranium(){
+ const root=document.getElementById("uraniumBlocks");
+ root.innerHTML="";
+ BLOCKS.forEach((block,index)=>{
+  const done=db.collected.includes(index);
+  const item=document.createElement("div");
+  item.className="uranium"+(done?" unlocked":"");
+  item.innerHTML=`
+   <small>STORAGE SLOT ${String(index+1).padStart(2,"0")}</small>
+   <h3>${block.name}</h3>
+   <span class="badge ${done?"green":"gold"}">${done?"REGISTERED":"LOCKED"}</span>
+   <input id="redeem-${index}" placeholder="ENTER REDEEM CODE"
+    autocomplete="off" ${done?"disabled":""}>
+   <button class="btn ${done?"success":"primary"}"
+    style="width:100%;margin-top:7px" ${done?"disabled":""}
+    onclick="redeem(${index})">${done?"REGISTERED":"VERIFY CODE"}</button>`;
+  root.appendChild(item);
+ });
+ updateStats();
+}
+
+function redeem(index){
+ if(db.collected.includes(index))return;
+ const input=document.getElementById("redeem-"+index);
+ if(!input)return;
+ const value=input.value.trim().toUpperCase();
+ if(value!==CODES[index]){
+  alert("رمز التسجيل غير صحيح.");
+  log("رفض محاولة تسجيل قطعة رقم "+(index+1));
   return;
  }
-
- data.collected.push(i);
+ db.collected.push(index);
  save();
- log("BLOCK "+(i+1)+" COLLECTED");
- renderBlocks();
-
- if(data.collected.length===12){
-  log("ALL 12 BLOCKS COLLECTED");
-  document.getElementById("miningmessage").textContent=
-   "تم جمع جميع القطع! يمكنك بدء Mining.";
-  document.getElementById("minebutton").disabled=false;
-  alert("مبروك! جمعت 12/12. Mining مفتوح.");
+ log("تم تسجيل قطعة Uranium رقم "+(index+1));
+ renderUranium();
+ if(db.collected.length===12){
+  alert("اكتمل تسجيل جميع القطع الاثنتي عشرة.");
+  log("اكتمل سجل المخزون الافتراضي 12/12");
  }
 }
+
+// MINING TIMER
+const MINING_DURATION=60*60*1000;
 
 function startMining(){
- if(data.collected.length!==12||data.mineEnd)return;
- data.mineEnd=Date.now()+HOUR;
- save();
- log("MINING TIMER STARTED");
- update();
-}
-
-function choose(location){
- if(data.nukeEnd||data.finished){
-  alert("الحدث الحالي لا يسمح بتغيير الموقع.");
+ if(db.collected.length!==12){
+  alert("يجب تسجيل القطع الاثنتي عشرة أولاً.");
   return;
  }
- data.selected=location;
+ if(db.miningDone||db.mineEnd)return;
+ db.mineEnd=Date.now()+MINING_DURATION;
  save();
- document.querySelectorAll(".pin").forEach(p=>{
-  p.classList.toggle("selected",p.textContent.toUpperCase().includes(location));
+ log("بدء مرحلة Mining الافتراضية لمدة ساعة.");
+ updateMining();
+}
+
+function resetMining(){
+ if(!confirm("إعادة ضبط عداد Mining؟"))return;
+ db.mineEnd=null;
+ db.miningDone=false;
+ save();
+ log("تمت إعادة ضبط مؤقت Mining.");
+ updateMining();
+}
+
+function updateMining(){
+ const timer=document.getElementById("mineTimer");
+ const progress=document.getElementById("mineProgress");
+ const message=document.getElementById("mineMessage");
+ const start=document.getElementById("mineStart");
+
+ if(db.miningDone){
+  timer.textContent="COMPLETE";
+  progress.style.width="100%";
+  message.textContent="اكتملت مرحلة Mining الافتراضية.";
+  start.disabled=true;
+  return;
+ }
+ if(db.collected.length!==12){
+  timer.textContent="01:00:00";
+  progress.style.width="0%";
+  message.textContent="تحتاج إلى تسجيل 12 قطعة.";
+  start.disabled=true;
+  return;
+ }
+ if(!db.mineEnd){
+  timer.textContent="01:00:00";
+  progress.style.width="0%";
+  message.textContent="جاهز لبدء المرحلة.";
+  start.disabled=false;
+  return;
+ }
+ const remaining=db.mineEnd-Date.now();
+ if(remaining<=0){
+  db.miningDone=true;
+  save();
+  timer.textContent="COMPLETE";
+  progress.style.width="100%";
+  message.textContent="اكتملت المرحلة الافتراضية.";
+  start.disabled=true;
+  log("انتهاء مرحلة Mining الافتراضية.");
+  updateStats();
+  return;
+ }
+ timer.textContent=formatTime(remaining);
+ progress.style.width=(100*(1-remaining/MINING_DURATION))+"%";
+ message.textContent="المرحلة قيد التنفيذ.";
+ start.disabled=true;
+}
+
+function formatTime(ms){
+ const seconds=Math.max(0,Math.floor(ms/1000));
+ const h=Math.floor(seconds/3600);
+ const m=Math.floor((seconds%3600)/60);
+ const s=seconds%60;
+ return [h,m,s].map(n=>String(n).padStart(2,"0")).join(":");
+}
+
+// STAFF
+function addStaff(){
+ const name=document.getElementById("staffName").value.trim();
+ const id=document.getElementById("staffID").value.trim();
+ if(!name||!id){alert("أدخل الاسم والرقم الوظيفي.");return}
+ if(db.staff.some(s=>s.id.toLowerCase()===id.toLowerCase())){
+  alert("هذا الرقم الوظيفي مسجل مسبقاً.");return;
+ }
+ db.staff.push({
+  name,id,
+  dept:document.getElementById("staffDept").value,
+  rank:document.getElementById("staffRank").value
  });
- document.getElementById("mapselection").textContent=
-  "الموقع المختار: "+location;
- document.getElementById("selectedstatus").textContent=location;
- log("RP LOCATION SELECTED: "+location);
- update();
-}
-
-function startNuke(){
- if(!data.mineEnd||Date.now()<data.mineEnd)return;
- if(!data.selected){
-  alert("اختار موقعاً من الخريطة أولاً.");
-  return;
- }
- if(data.nukeEnd||data.finished)return;
-
- if(!confirm("هل تريد بدء عداد حدث RP الافتراضي لمدة 10 دقائق؟"))return;
-
- data.nukeEnd=Date.now()+TEN_MIN;
  save();
- log("10-MINUTE RP EVENT STARTED");
- update();
+ log("تسجيل موظف جديد: "+name);
+ document.getElementById("staffName").value="";
+ document.getElementById("staffID").value="";
+ renderStaff();
 }
 
-function playAlarm(){
- try{
-  const AudioCtx=window.AudioContext||window.webkitAudioContext;
-  if(!AudioCtx)return;
-  if(!audioContext)audioContext=new AudioCtx();
-  if(audioContext.state==="suspended")audioContext.resume();
-
-  const osc=audioContext.createOscillator();
-  const gain=audioContext.createGain();
-  osc.type="sawtooth";
-  osc.frequency.value=850;
-  gain.gain.value=.07;
-  osc.connect(gain);
-  gain.connect(audioContext.destination);
-  osc.start();
-  osc.stop(audioContext.currentTime+.35);
- }catch(e){}
+function removeStaff(index){
+ if(!confirm("حذف الموظف من السجل؟"))return;
+ db.staff.splice(index,1);
+ save();renderStaff();log("حذف سجل موظف.");
 }
 
-function startAlarm(){
- if(alarmInterval)return;
- playAlarm();
- alarmInterval=setInterval(playAlarm,1200);
+function renderStaff(){
+ const body=document.getElementById("staffTable");
+ body.innerHTML=db.staff.map((s,i)=>`
+ <tr><td>${escapeHTML(s.name)}</td><td>${escapeHTML(s.id)}</td>
+ <td>${escapeHTML(s.dept)}</td><td>${escapeHTML(s.rank)}</td>
+ <td><button class="btn danger" onclick="removeStaff(${i})">حذف</button></td></tr>
+ `).join("")||'<tr><td colspan="5" class="empty">لا يوجد موظفون مسجلون.</td></tr>';
 }
 
-function stopAlarm(){
- if(alarmInterval){
-  clearInterval(alarmInterval);
-  alarmInterval=null;
- }
+// REPORTS
+function addReport(){
+ const title=document.getElementById("reportTitle").value.trim();
+ const body=document.getElementById("reportBody").value.trim();
+ if(!title||!body){alert("أدخل عنوان التقرير والتفاصيل.");return}
+ db.reports.unshift({
+  id:"RPT-"+Date.now().toString().slice(-7),
+  title,type:document.getElementById("reportType").value,
+  body,date:timeNow()
+ });
+ save();log("إضافة تقرير: "+title);
+ document.getElementById("reportTitle").value="";
+ document.getElementById("reportBody").value="";
+ renderReports();
 }
 
-function closeBlast(){
- document.getElementById("blast").classList.remove("show");
+function renderReports(){
+ document.getElementById("reportTable").innerHTML=
+ db.reports.map(r=>`<tr>
+ <td>${escapeHTML(r.id)}</td><td>${escapeHTML(r.title)}</td>
+ <td>${escapeHTML(r.type)}</td><td>${escapeHTML(r.date)}</td>
+ </tr>`).join("")||'<tr><td colspan="4" class="empty">لا توجد تقارير.</td></tr>';
+ document.getElementById("statReports").textContent=
+ String(db.reports.length).padStart(2,"0");
 }
 
-function finishEvent(){
- if(data.finished)return;
- data.finished=true;
+// INCIDENTS
+function addIncident(){
+ const desc=document.getElementById("incidentDesc").value.trim();
+ if(!desc){alert("اكتب وصف الحادث.");return}
+ db.incidents.unshift({
+  id:"INC-"+Date.now().toString().slice(-6),
+  type:document.getElementById("incidentType").value,
+  desc,date:timeNow(),status:"OPEN"
+ });
  save();
- startAlarm();
- document.getElementById("blast").classList.add("show");
- log("RP EVENT SIMULATION COMPLETED");
- update();
+ log("تسجيل حادث RP جديد.");
+ document.getElementById("incidentDesc").value="";
+ renderIncidents();
 }
 
-function format(ms){
- ms=Math.max(0,Math.floor(ms/1000));
- const h=Math.floor(ms/3600);
- const m=Math.floor((ms%3600)/60);
- const s=ms%60;
- return [h,m,s].map(v=>String(v).padStart(2,"0")).join(":");
+function closeIncident(index){
+ db.incidents[index].status="CLOSED";
+ save();log("إغلاق سجل حادث.");
+ renderIncidents();
 }
 
-function update(){
- const count=data.collected.length;
- document.getElementById("count").textContent=count+" / 12";
- document.getElementById("uraniumbar").style.width=(count/12*100)+"%";
- document.getElementById("progresslabel").textContent=
-  Math.round(count/12*100)+"% COMPLETED";
-
- const mineReady=count===12;
- document.getElementById("minestatus").textContent=
-  data.mineEnd?"ACTIVE":mineReady?"READY":"LOCKED";
-
- document.getElementById("minebutton").disabled=
-  !mineReady||!!data.mineEnd;
-
- if(data.mineEnd){
-  const left=data.mineEnd-Date.now();
-  if(left>0){
-   document.getElementById("minetimer").textContent=format(left);
-   document.getElementById("minepercent").textContent=
-    "MINING IN PROGRESS";
-   document.getElementById("minebar").style.width=
-    ((1-left/HOUR)*100)+"%";
-  }else{
-   document.getElementById("minetimer").textContent="00:00:00";
-   document.getElementById("minepercent").textContent="MINING COMPLETE";
-   document.getElementById("minebar").style.width="100%";
-   document.getElementById("miningmessage").textContent=
-    "انتهت المحاكاة الزمنية للتعدين. تم فتح مركز التحكم.";
-  }
- }else{
-  document.getElementById("minetimer").textContent="01:00:00";
- }
-
- const unlocked=!!data.mineEnd&&Date.now()>=data.mineEnd;
- document.getElementById("controlstatus").textContent=
-  unlocked?"READY":"LOCKED";
- document.getElementById("nukebutton").disabled=
-  !unlocked||!data.selected||!!data.nukeEnd||data.finished;
-
- document.getElementById("controlmessage").textContent=
-  unlocked?"مركز التحكم مفتوح. اختر موقعاً لحدث RP.":
-  "مركز التحكم ينتظر انتهاء Mining.";
-
- if(data.nukeEnd){
-  const left=data.nukeEnd-Date.now();
-  if(left>0){
-   document.getElementById("nuketimer").textContent=format(left).slice(3);
-   document.getElementById("nukebar").style.width=
-    ((1-left/TEN_MIN)*100)+"%";
-   document.getElementById("nukestatus").textContent=
-    "RP EVENT COUNTDOWN";
-  }else if(!data.finished){
-   document.getElementById("nuketimer").textContent="00:00";
-   document.getElementById("nukebar").style.width="100%";
-   finishEvent();
-  }
- }else{
-  document.getElementById("nuketimer").textContent="10:00";
- }
- if(data.finished){
-  document.getElementById("nukestatus").textContent="EVENT COMPLETED";
-  document.getElementById("nukebutton").disabled=true;
- }
+function renderIncidents(){
+ document.getElementById("incidentCount").textContent=
+ db.incidents.filter(i=>i.status==="OPEN").length;
+ document.getElementById("incidentList").innerHTML=
+ db.incidents.map((i,index)=>`
+ <div class="log">
+  <time>${escapeHTML(i.date)} / ${escapeHTML(i.id)}</time>
+  <b>${escapeHTML(i.type)}</b> — ${escapeHTML(i.status)}
+  <p>${escapeHTML(i.desc)}</p>
+  ${i.status==="OPEN"?`<button class="btn success" onclick="closeIncident(${index})">إغلاق الحادث</button>`:""}
+ </div>`).join("")||'<div class="empty">لا توجد حوادث مسجلة.</div>';
 }
 
-function resetAll(){
- if(!confirm("واش متأكد؟ غادي يتم مسح جميع مراحل التقدم؟"))return;
- stopAlarm();
- localStorage.removeItem(KEY);
- data={collected:[],mineEnd:null,nukeEnd:null,
-  selected:null,finished:false};
- document.getElementById("selectedstatus").textContent="NONE";
- document.getElementById("mapselection").textContent=
-  "لم يتم اختيار موقع بعد.";
- document.querySelectorAll(".pin").forEach(p=>p.classList.remove("selected"));
- closeBlast();
- document.getElementById("logs").innerHTML="SYSTEM RESET";
- renderBlocks();
- update();
+// REACTOR SIMULATION
+function setReactor(state){
+ db.reactorState=state;
+ save();
+ document.getElementById("reactorState").textContent="الحالة: "+state;
+ log("تغيير حالة العرض الافتراضي إلى "+state);
 }
 
-renderBlocks();
-if(data.selected){
- document.getElementById("mapselection").textContent=
-  "الموقع المختار: "+data.selected;
+function selectRoom(element,name){
+ document.querySelectorAll(".room").forEach(r=>r.classList.remove("selected"));
+ element.classList.add("selected");
+ db.selectedRoom=name;
+ save();
+ document.getElementById("roomInfo").textContent="القسم المختار: "+name;
 }
-setInterval(update,1000);
+
+// ARCHIVE
+function renderLogs(){
+ const html=db.logs.map(l=>`
+ <div class="log"><time>${escapeHTML(l.time)}</time>${escapeHTML(l.message)}</div>
+ `).join("")||'<div class="empty">لا توجد نشاطات.</div>';
+ document.getElementById("fullLogs").innerHTML=html;
+ document.getElementById("recentLogs").innerHTML=
+ html.split("</div>").slice(0,6).join("</div>");
+}
+
+// SETTINGS
+function saveSettings(){
+ db.settings={
+  name:document.getElementById("facilityName").value,
+  code:document.getElementById("facilityCode").value,
+  director:document.getElementById("director").value
+ };
+ save();log("تم تحديث إعدادات المنشأة.");
+ alert("تم حفظ الإعدادات.");
+}
+
+function backup(){
+ const file=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(file);
+ const a=document.createElement("a");
+ a.href=url;a.download="MAKS_CITY_FACILITY_BACKUP.json";
+ a.click();URL.revokeObjectURL(url);
+}
+
+function restoreBackup(event){
+ const file=event.target.files[0];
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const imported=JSON.parse(reader.result);
+   if(!imported||!Array.isArray(imported.collected)||
+      !Array.isArray(imported.staff)||!Array.isArray(imported.logs)){
+    throw new Error("Invalid backup");
+   }
+   if(!confirm("استبدال البيانات الحالية بالنسخة المختارة؟"))return;
+   db={...DEFAULT,...imported,
+    settings:{...DEFAULT.settings,...imported.settings}};
+   save();location.reload();
+  }catch(e){alert("ملف النسخة الاحتياطية غير صالح.");}
+ };
+ reader.readAsText(file);
+}
+
+function factoryReset(){
+ if(!confirm("تحذير: حذف جميع بيانات المنشأة من هذا المتصفح؟"))return;
+ if(!confirm("تأكيد نهائي لإعادة ضبط النظام؟"))return;
+ localStorage.removeItem(STORAGE_KEY);
+ location.reload();
+}
+
+// DASHBOARD
+function updateStats(){
+ document.getElementById("statU").textContent=
+ String(db.collected.length).padStart(2,"0")+" / 12";
+ document.getElementById("uCount").textContent=
+ db.collected.length+"/12";
+ document.getElementById("uRemain").textContent=
+ 12-db.collected.length;
+ document.getElementById("statMining").textContent=
+ db.miningDone?"COMPLETE":db.mineEnd?"ACTIVE":
+ db.collected.length===12?"READY":"LOCKED";
+}
+
+function renderSettings(){
+ document.getElementById("facilityName").value=db.settings.name;
+ document.getElementById("facilityCode").value=db.settings.code;
+ document.getElementById("director").value=db.settings.director;
+ document.getElementById("reactorState").textContent=
+ "الحالة: "+db.reactorState;
+ document.getElementById("facilityState").textContent=db.facilityState;
+}
+
+function renderAll(){
+ renderUranium();
+ renderStaff();
+ renderReports();
+ renderIncidents();
+ renderLogs();
+ renderSettings();
+ updateMining();
+ updateStats();
+}
+
+renderAll();
+setInterval(()=>{
+ updateClock();
+ updateMining();
+ updateStats();
+},1000);
+
+log("تم تشغيل نظام MAKS CITY NUCLEAR FACILITY.");
 </script>
 </body>
 </html>
