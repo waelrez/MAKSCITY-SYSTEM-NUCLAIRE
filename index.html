@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EMERGENCY HAMBURG | NUCLEAR OPERATIONS</title>
+<style>
+:root{
+ --bg:#080b10;--panel:#111923;--panel2:#18232f;
+ --red:#e53935;--gold:#d9a441;--text:#edf2f7;
+ --muted:#8997a8;--green:#32c787;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,Tahoma,sans-serif}
+header{background:#101720;border-bottom:1px solid #293442;
+ padding:18px 5%;display:flex;align-items:center;
+ justify-content:space-between;gap:15px;flex-wrap:wrap}
+.brand{font-size:19px;font-weight:900;letter-spacing:1px}
+.brand span{color:var(--red)}
+.status{color:var(--green);font-size:12px}
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:12px 5%;
+ background:#0d131b;border-bottom:1px solid #26313d}
+button{cursor:pointer;border:1px solid #344251;border-radius:7px;
+ padding:11px 15px;background:#1b2734;color:white;font-weight:bold}
+button:hover{border-color:var(--gold);background:#263545}
+button:disabled{opacity:.4;cursor:not-allowed}
+nav button{font-size:12px}
+main{max-width:1200px;margin:auto;padding:22px 4%}
+.hero{background:linear-gradient(120deg,#1a202a,#111720);
+ border:1px solid #303b48;border-radius:12px;padding:25px;
+ position:relative;overflow:hidden}
+.hero h1{font-size:clamp(25px,5vw,42px);margin:8px 0;color:white}
+.hero h1 span{color:var(--red)}
+.hero p{color:var(--muted);line-height:1.8}
+.tag{color:var(--red);font-size:11px;font-weight:bold;letter-spacing:2px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);
+ gap:12px;margin:18px 0}
+.stat,.panel{background:var(--panel);border:1px solid #293542;
+ border-radius:10px;padding:17px}
+.stat small{color:var(--muted)}
+.stat strong{display:block;font-size:23px;margin-top:9px}
+.section{margin-top:30px}
+.section h2{font-size:20px;border-right:3px solid var(--red);
+ padding-right:12px}
+.sub{color:var(--muted);font-size:13px;line-height:1.8}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.block{background:var(--panel);border:1px solid #2d3947;
+ border-radius:9px;padding:15px}
+.block h3{margin:5px 0 12px;font-size:15px}
+.block .number{color:var(--gold);font-size:11px}
+.block input{width:100%;padding:11px;background:#080e15;
+ color:white;border:1px solid #364657;border-radius:6px;
+ margin:8px 0;direction:ltr;text-align:center}
+.block.done{border-color:var(--green)}
+.block.done button{background:#14543e}
+.progress{height:9px;background:#293441;border-radius:20px;overflow:hidden}
+.progress div{height:100%;width:0;background:var(--green);
+ transition:width .3s}
+.timer{font-size:35px;font-weight:900;color:var(--gold);
+ direction:ltr;text-align:center;padding:12px}
+.center{text-align:center}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.primary{background:#a62c2c;border-color:#e54b4b}
+.gold{background:#80601f;border-color:var(--gold)}
+.map{
+ min-height:440px;position:relative;overflow:hidden;
+ border:1px solid #394653;border-radius:12px;
+ background:
+ linear-gradient(35deg,transparent 47%,#34404b 48%,#34404b 50%,transparent 51%),
+ linear-gradient(145deg,transparent 45%,#34404b 46%,#34404b 48%,transparent 49%),
+ #182b2d;
+ background-size:160px 130px,180px 150px,auto;
+}
+.map:before{content:"HAMBURG";position:absolute;top:10px;left:15px;
+ font-size:30px;font-weight:900;color:#ffffff14}
+.water{position:absolute;background:#1c4050;opacity:.85;
+ width:130%;height:65px;top:48%;left:-10%;transform:rotate(-15deg);
+ border:1px solid #396071}
+.pin{
+ position:absolute;z-index:2;transform:translate(-50%,-50%);
+ background:#111c26;border:1px solid #667687;border-radius:7px;
+ padding:9px 11px;font-size:11px;white-space:nowrap
+}
+.pin.selected{background:#9c2929;border-color:#ff7777;
+ box-shadow:0 0 15px #e5393570}
+.pin:after{content:"";position:absolute;top:100%;left:50%;
+ border:6px solid transparent;border-top-color:#667687}
+.map-label{position:absolute;bottom:12px;right:12px;
+ background:#0a121cdd;padding:9px;border-radius:6px;
+ font-size:11px;color:#bdc8d4}
+.alert{background:#301718;border:1px solid #8e3434;
+ border-radius:8px;padding:14px;color:#ffb7b7}
+.hidden{display:none!important}
+footer{text-align:center;padding:30px;color:#788594;font-size:11px;
+ border-top:1px solid #25303a;margin-top:40px}
+#blast{position:fixed;inset:0;background:#fff;
+ z-index:20;display:none;align-items:center;justify-content:center;
+ flex-direction:column;color:#111;text-align:center}
+#blast.show{display:flex;animation:flash .7s ease-in-out 5}
+#blast h1{font-size:clamp(35px,9vw,80px);margin:0}
+@keyframes flash{0%,100%{background:#fff}50%{background:#f04c22}}
+@media(max-width:700px){
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .grid{grid-template-columns:repeat(2,1fr)}
+ .pin{font-size:9px;padding:7px}
+ .map{min-height:390px}
+}
+@media(max-width:430px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="brand">EMERGENCY <span>HAMBURG</span></div>
+ <div class="status">● SYSTEM ONLINE / RP SIMULATION</div>
+</header>
+
+<nav>
+ <button onclick="go('dashboard')">الرئيسية</button>
+ <button onclick="go('uranium')">Uranium</button>
+ <button onclick="go('mining')">Mining</button>
+ <button onclick="go('mapsection')">Hamburg Map</button>
+ <button onclick="go('control')">Nuke Control</button>
+</nav>
+
+<main>
+<section class="hero" id="dashboard">
+ <div class="tag">CLASSIFIED ROLEPLAY OPERATIONS</div>
+ <h1>NUCLEAR <span>OPERATIONS</span></h1>
+ <p>مركز العمليات الخاص بسيرفر Emergency Hamburg RP.
+ جميع الأنظمة هنا عبارة عن محاكاة افتراضية داخل الموقع.</p>
+ <div class="alert">⚠ تنبيه: نظام تجريبي خاص بأحداث Roleplay.</div>
+</section>
+
+<div class="stats">
+ <div class="stat"><small>Uranium Blocks</small><strong id="count">0 / 12</strong></div>
+ <div class="stat"><small>Mining Status</small><strong id="minestatus">LOCKED</strong></div>
+ <div class="stat"><small>Control Center</small><strong id="controlstatus">LOCKED</strong></div>
+ <div class="stat"><small>Selected Location</small><strong id="selectedstatus">NONE</strong></div>
+</div>
+
+<section class="section" id="uranium">
+ <h2>01 — URANIUM COLLECTION</h2>
+ <p class="sub">أدخل كود كل قطعة لفتحها. كل كود صالح للاستعمال مرة واحدة في هذا المتصفح.</p>
+ <div class="progress"><div id="uraniumbar"></div></div>
+ <p class="sub" id="progresslabel">0% COMPLETED</p>
+ <div class="grid" id="blocks"></div>
+</section>
+
+<section class="section" id="mining">
+ <h2>02 — MINING CENTER</h2>
+ <div class="panel center">
+  <div class="tag">MINING OPERATION</div>
+  <p class="sub" id="miningmessage">اجمع 12 قطعة Uranium لفتح هذا القسم.</p>
+  <div class="timer" id="minetimer">01:00:00</div>
+  <div class="progress"><div id="minebar"></div></div>
+  <p class="sub" id="minepercent">WAITING FOR COLLECTION</p>
+  <div class="actions">
+   <button class="gold" id="minebutton" disabled onclick="startMining()">START MINING</button>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="mapsection">
+ <h2>03 — HAMBURG CITY MAP</h2>
+ <p class="sub">خريطة تخطيطية للمدينة لأغراض RP. اختار موقعاً افتراضياً من العلامات.</p>
+ <div class="map" id="citymap">
+  <div class="water"></div>
+  <button class="pin" style="top:19%;left:20%" onclick="choose('POLICE STATION')">🚔 Police</button>
+  <button class="pin" style="top:25%;left:72%" onclick="choose('HOSPITAL')">🏥 Hospital</button>
+  <button class="pin" style="top:55%;left:25%" onclick="choose('FIRE STATION')">🚒 Fire</button>
+  <button class="pin" style="top:73%;left:75%" onclick="choose('BANK')">🏦 Bank</button>
+  <button class="pin" style="top:83%;left:38%" onclick="choose('HARBOUR')">⚓ Harbour</button>
+  <button class="pin" style="top:38%;left:49%" onclick="choose('CITY CENTER')">🏙 City Center</button>
+  <button class="pin" style="top:65%;left:54%" onclick="choose('PRISON')">🔒 Prison</button>
+  <button class="pin" style="top:15%;left:48%" onclick="choose('DEALERSHIP')">🚗 Dealership</button>
+  <div class="map-label">HAMBURG — RP SCHEMATIC MAP</div>
+ </div>
+ <p class="sub center" id="mapselection">لم يتم اختيار موقع بعد.</p>
+</section>
+
+<section class="section" id="control">
+ <h2>04 — NUCLEAR CONTROL SIMULATION</h2>
+ <div class="panel center">
+  <div class="tag">FINAL EVENT CONTROL</div>
+  <p class="sub" id="controlmessage">مركز التحكم مقفل. أكمل مرحلة Mining أولاً.</p>
+  <div class="timer" id="nuketimer">10:00</div>
+  <div class="progress"><div id="nukebar"></div></div>
+  <p class="sub" id="nukestatus">SYSTEM LOCKED</p>
+  <div class="actions">
+   <button id="nukebutton" class="primary" disabled onclick="startNuke()">START RP EVENT</button>
+   <button onclick="stopAlarm()">STOP ALARM</button>
+  </div>
+ </div>
+</section>
+
+<section class="section">
+ <h2>05 — SYSTEM LOGS</h2>
+ <div class="panel" id="logs" style="font-size:12px;line-height:2">
+  SYSTEM INITIALIZED
+ </div>
+</section>
+
+<div class="actions" style="margin-top:30px">
+ <button onclick="resetAll()">RESET ALL PROGRESS</button>
+</div>
+</main>
+
+<div id="blast">
+ <div style="font-size:70px">☢️</div>
+ <h1>RP EVENT COMPLETE</h1>
+ <p>انتهت المحاكاة النووية الافتراضية.</p>
+ <button onclick="closeBlast()">RETURN TO SYSTEM</button>
+</div>
+
+<footer>
+EMERGENCY HAMBURG RP • NUCLEAR OPERATIONS V1.0<br>
+FICTIONAL ROLEPLAY SIMULATION — NOT AN OFFICIAL GAME SYSTEM
+</footer>
+
+<script>
+// =====================================
+// 12 FICTIONAL REDEEM CODES
+// =====================================
+const REDEEM_CODES = [
+ "UR-7K29-AH01","UR-8M41-BH02",
+ "UR-9P53-CH03","UR-2Q64-DH04",
+ "UR-3R75-EH05","UR-4S86-FH06",
+ "UR-5T97-GH07","UR-6U18-HH08",
+ "UR-1V29-IH09","UR-2W30-JH10",
+ "UR-3X41-KH11","UR-4Y52-LH12"
+];
+
+const names = [
+ "Uranium Block 01","Uranium Block 02",
+ "Uranium Block 03","Uranium Block 04",
+ "Uranium Block 05","Uranium Block 06",
+ "Uranium Block 07","Uranium Block 08",
+ "Uranium Block 09","Uranium Block 10",
+ "Uranium Block 11","Uranium Block 12"
+];
+
+const KEY="hamburg_nuclear_rp_v1";
+const HOUR=60*60*1000;
+const TEN_MIN=10*60*1000;
+
+let data=JSON.parse(localStorage.getItem(KEY)||"null")||{
+ collected:[],mineEnd:null,nukeEnd:null,
+ selected:null,finished:false
+};
+
+let alarmInterval=null;
+let audioContext=null;
+
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(data));
+}
+
+function log(message){
+ const el=document.getElementById("logs");
+ const time=new Date().toLocaleTimeString();
+ el.innerHTML=`<div>[${time}] — ${message}</div>`+el.innerHTML;
+}
+
+function go(id){
+ document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+function renderBlocks(){
+ const container=document.getElementById("blocks");
+ container.innerHTML="";
+ names.forEach((name,i)=>{
+  const done=data.collected.includes(i);
+  const div=document.createElement("div");
+  div.className="block"+(done?" done":"");
+  div.innerHTML=`
+   <div class="number">BLOCK ${String(i+1).padStart(2,"0")}</div>
+   <h3>${name}</h3>
+   <input id="code${i}" placeholder="ENTER REDEEM CODE"
+    autocomplete="off" ${done?"disabled":""}>
+   <button style="width:100%" ${done?"disabled":""}
+    onclick="redeem(${i})">${done?"✓ COLLECTED":"REDEEM BLOCK"}</button>
+  `;
+  container.appendChild(div);
+ });
+ update();
+}
+
+function redeem(i){
+ const input=document.getElementById("code"+i);
+ const code=input.value.trim().toUpperCase();
+
+ if(data.collected.includes(i))return;
+ if(code!==REDEEM_CODES[i]){
+  alert("الكود غير صحيح!");
+  log("INVALID REDEEM ATTEMPT");
+  return;
+ }
+
+ data.collected.push(i);
+ save();
+ log("BLOCK "+(i+1)+" COLLECTED");
+ renderBlocks();
+
+ if(data.collected.length===12){
+  log("ALL 12 BLOCKS COLLECTED");
+  document.getElementById("miningmessage").textContent=
+   "تم جمع جميع القطع! يمكنك بدء Mining.";
+  document.getElementById("minebutton").disabled=false;
+  alert("مبروك! جمعت 12/12. Mining مفتوح.");
+ }
+}
+
+function startMining(){
+ if(data.collected.length!==12||data.mineEnd)return;
+ data.mineEnd=Date.now()+HOUR;
+ save();
+ log("MINING TIMER STARTED");
+ update();
+}
+
+function choose(location){
+ if(data.nukeEnd||data.finished){
+  alert("الحدث الحالي لا يسمح بتغيير الموقع.");
+  return;
+ }
+ data.selected=location;
+ save();
+ document.querySelectorAll(".pin").forEach(p=>{
+  p.classList.toggle("selected",p.textContent.toUpperCase().includes(location));
+ });
+ document.getElementById("mapselection").textContent=
+  "الموقع المختار: "+location;
+ document.getElementById("selectedstatus").textContent=location;
+ log("RP LOCATION SELECTED: "+location);
+ update();
+}
+
+function startNuke(){
+ if(!data.mineEnd||Date.now()<data.mineEnd)return;
+ if(!data.selected){
+  alert("اختار موقعاً من الخريطة أولاً.");
+  return;
+ }
+ if(data.nukeEnd||data.finished)return;
+
+ if(!confirm("هل تريد بدء عداد حدث RP الافتراضي لمدة 10 دقائق؟"))return;
+
+ data.nukeEnd=Date.now()+TEN_MIN;
+ save();
+ log("10-MINUTE RP EVENT STARTED");
+ update();
+}
+
+function playAlarm(){
+ try{
+  const AudioCtx=window.AudioContext||window.webkitAudioContext;
+  if(!AudioCtx)return;
+  if(!audioContext)audioContext=new AudioCtx();
+  if(audioContext.state==="suspended")audioContext.resume();
+
+  const osc=audioContext.createOscillator();
+  const gain=audioContext.createGain();
+  osc.type="sawtooth";
+  osc.frequency.value=850;
+  gain.gain.value=.07;
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+  osc.start();
+  osc.stop(audioContext.currentTime+.35);
+ }catch(e){}
+}
+
+function startAlarm(){
+ if(alarmInterval)return;
+ playAlarm();
+ alarmInterval=setInterval(playAlarm,1200);
+}
+
+function stopAlarm(){
+ if(alarmInterval){
+  clearInterval(alarmInterval);
+  alarmInterval=null;
+ }
+}
+
+function closeBlast(){
+ document.getElementById("blast").classList.remove("show");
+}
+
+function finishEvent(){
+ if(data.finished)return;
+ data.finished=true;
+ save();
+ startAlarm();
+ document.getElementById("blast").classList.add("show");
+ log("RP EVENT SIMULATION COMPLETED");
+ update();
+}
+
+function format(ms){
+ ms=Math.max(0,Math.floor(ms/1000));
+ const h=Math.floor(ms/3600);
+ const m=Math.floor((ms%3600)/60);
+ const s=ms%60;
+ return [h,m,s].map(v=>String(v).padStart(2,"0")).join(":");
+}
+
+function update(){
+ const count=data.collected.length;
+ document.getElementById("count").textContent=count+" / 12";
+ document.getElementById("uraniumbar").style.width=(count/12*100)+"%";
+ document.getElementById("progresslabel").textContent=
+  Math.round(count/12*100)+"% COMPLETED";
+
+ const mineReady=count===12;
+ document.getElementById("minestatus").textContent=
+  data.mineEnd?"ACTIVE":mineReady?"READY":"LOCKED";
+
+ document.getElementById("minebutton").disabled=
+  !mineReady||!!data.mineEnd;
+
+ if(data.mineEnd){
+  const left=data.mineEnd-Date.now();
+  if(left>0){
+   document.getElementById("minetimer").textContent=format(left);
+   document.getElementById("minepercent").textContent=
+    "MINING IN PROGRESS";
+   document.getElementById("minebar").style.width=
+    ((1-left/HOUR)*100)+"%";
+  }else{
+   document.getElementById("minetimer").textContent="00:00:00";
+   document.getElementById("minepercent").textContent="MINING COMPLETE";
+   document.getElementById("minebar").style.width="100%";
+   document.getElementById("miningmessage").textContent=
+    "انتهت المحاكاة الزمنية للتعدين. تم فتح مركز التحكم.";
+  }
+ }else{
+  document.getElementById("minetimer").textContent="01:00:00";
+ }
+
+ const unlocked=!!data.mineEnd&&Date.now()>=data.mineEnd;
+ document.getElementById("controlstatus").textContent=
+  unlocked?"READY":"LOCKED";
+ document.getElementById("nukebutton").disabled=
+  !unlocked||!data.selected||!!data.nukeEnd||data.finished;
+
+ document.getElementById("controlmessage").textContent=
+  unlocked?"مركز التحكم مفتوح. اختر موقعاً لحدث RP.":
+  "مركز التحكم ينتظر انتهاء Mining.";
+
+ if(data.nukeEnd){
+  const left=data.nukeEnd-Date.now();
+  if(left>0){
+   document.getElementById("nuketimer").textContent=format(left).slice(3);
+   document.getElementById("nukebar").style.width=
+    ((1-left/TEN_MIN)*100)+"%";
+   document.getElementById("nukestatus").textContent=
+    "RP EVENT COUNTDOWN";
+  }else if(!data.finished){
+   document.getElementById("nuketimer").textContent="00:00";
+   document.getElementById("nukebar").style.width="100%";
+   finishEvent();
+  }
+ }else{
+  document.getElementById("nuketimer").textContent="10:00";
+ }
+ if(data.finished){
+  document.getElementById("nukestatus").textContent="EVENT COMPLETED";
+  document.getElementById("nukebutton").disabled=true;
+ }
+}
+
+function resetAll(){
+ if(!confirm("واش متأكد؟ غادي يتم مسح جميع مراحل التقدم؟"))return;
+ stopAlarm();
+ localStorage.removeItem(KEY);
+ data={collected:[],mineEnd:null,nukeEnd:null,
+  selected:null,finished:false};
+ document.getElementById("selectedstatus").textContent="NONE";
+ document.getElementById("mapselection").textContent=
+  "لم يتم اختيار موقع بعد.";
+ document.querySelectorAll(".pin").forEach(p=>p.classList.remove("selected"));
+ closeBlast();
+ document.getElementById("logs").innerHTML="SYSTEM RESET";
+ renderBlocks();
+ update();
+}
+
+renderBlocks();
+if(data.selected){
+ document.getElementById("mapselection").textContent=
+  "الموقع المختار: "+data.selected;
+}
+setInterval(update,1000);
+</script>
+</body>
+</html>
