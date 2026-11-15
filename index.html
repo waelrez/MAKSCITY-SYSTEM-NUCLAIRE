@@ -685,7 +685,7 @@ function updateMining(){
   return;
  }
  if(db.blocks.length!==12){
-  timer.textContent="01:00:00";
+  timer.textContent="00:01:00";
   bar.style.width="0%";
   message.textContent="يجب جمع 12 وحدة أولاً.";
   start.disabled=true;
@@ -693,7 +693,7 @@ function updateMining(){
   return;
  }
  if(!db.mineEnd){
-  timer.textContent="01:00:00";
+  timer.textContent="00:01:00";
   bar.style.width="0%";
   message.textContent="جاهز لبدء عملية التعدين.";
   start.disabled=false;
@@ -777,7 +777,7 @@ function renderAlarm(){
 // عداد حدث RP مستقل
 function startEvent(){
  if(db.eventEnd){alert("هناك حدث نشط بالفعل.");return;}
- if(!confirm("بدء عداد حدث RP لمدة 10 دقائق؟"))return;
+ if(!confirm("بدء عداد حدث RP لمدة 1 دقائق؟"))return;
  db.eventEnd=Date.now()+TEN_MIN;
  save();
  log("بدء عداد حدث RP لمدة عشر دقائق.");
@@ -795,7 +795,7 @@ function updateEvent(){
  const el=document.getElementById("eventTimer");
  const msg=document.getElementById("eventMessage");
  if(!db.eventEnd){
-  el.textContent="10:00";
+  el.textContent="01:00";
   msg.textContent="لا يوجد حدث نشط.";
   return;
  }
